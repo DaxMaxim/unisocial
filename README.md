@@ -1,6 +1,6 @@
-# CampusConnect (UniSocial) – Student-to-Student Marketplace
+# UniSocial – Student-to-Student Social Media and Marketplace (Even for trivial Jobs! Makes daily life easier)
 
-UniSocial is a platform for university students to exchange services, home-cooked meals, tutoring, errands, and micro-jobs. This repository contains the **initial skeleton** for frontend, backend microservices and AI services.
+UniSocial is a platform for university students to exchange services, home cooked meals, tutoring, errands and micro-jobs. This repository contains the **initial skeleton** for frontend, backend microservices and AI services.
 
 ## Tech Stack
 - **Frontend:** React (browser)
