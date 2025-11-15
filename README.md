@@ -32,7 +32,7 @@ flowchart TD
         A[React Web App] -->|REST / WebSocket| B[API Gateway]
     end
 
-    subgraph Backend (Java Spring Boot)
+    subgraph Backend
         B --> U[User Service]
         B --> T[Task Service]
         B --> F[Feed Service]
@@ -40,7 +40,7 @@ flowchart TD
         B --> M[Messaging Service]
     end
 
-    subgraph AI Service (Python FastAPI)
+    subgraph AI_Service
         AI[AI Microservice] -->|Price Prediction, Moderation, Matching| T
         AI -->|Content Moderation| F
     end
@@ -54,7 +54,7 @@ flowchart TD
         S3[Amazon S3 / MinIO]
     end
 
-    subgraph Messaging Queue
+    subgraph Messaging_Queue
         Kafka[Kafka Topics]
     end
 
@@ -71,7 +71,5 @@ flowchart TD
 
     T --> Kafka
     N --> Kafka
-    M --> Kafka
+    M --> Kaf
 
-    F --> S3
-    M --> S3
