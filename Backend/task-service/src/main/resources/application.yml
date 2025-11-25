@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/unidb
+    username: mohitchaturvedi        # replace with your DB username
+    password: 1234   # replace with your DB password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none         # DB schema already exists
+    show-sql: true            # log SQL statements
+    properties:
+      hibernate:
+        format_sql: true
+
+# Optional: configure PostgreSQL timezone
+  jackson:
+    time-zone: UTC
+
+# Server port
+server:
+  port: 8081
