@@ -1,2 +1,51 @@
+# macOS files
 .DS_Store
 **/.DS_Store
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# VS Code
+.vscode/
+
+# Maven
+target/
+*.log
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle (if used anywhere)
+build/
+.gradle/
+gradle-app.setting
+
+# Logs
+*.log
+logs/
+
+# Environment files (IMPORTANT)
+.env
+*.env
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Compiled class files
+*.class
+
+# Spring Boot dev tools
+.spring-boot-devtools.properties
+
+# Sensitive app-specific config
+application-local.yml
+application-dev.yml
+
+# Package archives
+*.jar
+*.war
+
+# User-specific files
+*.swp
+*~

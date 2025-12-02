@@ -1,5 +1,4 @@
-package com.unisocial.task_service.dto;
-
+package com.unisocial.user_service.dto;
 import lombok.Data;
 
 @Data

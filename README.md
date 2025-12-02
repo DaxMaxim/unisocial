@@ -73,3 +73,14 @@ flowchart TD
     N --> Kafka
     M --> Kaf
 
+For Java code:
+This project uses environment variables for database configuration and JWT authentication.
+
+Create the following environment variables before running the application:
+
+Required variables
+Variable	Description
+DB_URL	- JDBC URL of your PostgreSQL database
+DB_USERNAME	- Database username
+DB_PASSWORD	- Database password
+JWT_SECRET	- Secret key for signing JWT tokens

@@ -2,50 +2,88 @@ package com.unisocial.task_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import com.unisocial.task_service.dto.TaskRequest;
 import com.unisocial.task_service.dto.UniRequest;
+import com.unisocial.task_service.dto.UniResponse;
 import com.unisocial.task_service.entity.Task;
 import com.unisocial.task_service.service.TaskService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
-	
-	@Autowired
+
+    @Autowired
     private TaskService service;
 
-    // CREATE
-	@PostMapping("/create")
-	public Task create(@RequestBody UniRequest<TaskRequest> request) {
-	    return service.create(request);
-	}
+    private Long getLoggedUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return Long.parseLong(auth.getName());
+    }
 
-    // READ
+    /** CREATE */
+    @PostMapping("/create")
+    public ResponseEntity<UniResponse<Task>> create(@RequestBody UniRequest<TaskRequest> request) {
+        try {
+            Long userId = getLoggedUserId();
+            Task savedTask = service.create(userId, request.getData());
+            return ResponseEntity.ok(UniResponse.success(savedTask, "Task created successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(UniResponse.error("CREATE_FAILED", e.getMessage()));
+        }
+    }
+
+    /** READ */
     @GetMapping("/{id}")
-    public Task get(@PathVariable Long id) {
-        return service.get(id);
+    public ResponseEntity<UniResponse<Task>> get(@PathVariable Long id) {
+        Task t = service.get(id);
+        if (t == null) {
+            return ResponseEntity.badRequest()
+                    .body(UniResponse.error("NOT_FOUND", "Task not found"));
+        }
+        return ResponseEntity.ok(UniResponse.success(t, "Task fetched successfully"));
     }
 
-    // UPDATE
+    /** UPDATE */
     @PutMapping("/update/{id}")
-    public Task update(@PathVariable Long id, @RequestBody UniRequest<TaskRequest> request) {
-        return service.update(id, request);
+    public ResponseEntity<UniResponse<Task>> update(
+            @PathVariable Long id,
+            @RequestBody UniRequest<TaskRequest> request) {
+
+        Long userId = getLoggedUserId();
+        Task updated = service.update(id, userId, request.getData());
+
+        if (updated == null) {
+            return ResponseEntity.badRequest()
+                    .body(UniResponse.error("UPDATE_FAILED", "Task not found or not owned by user"));
+        }
+
+        return ResponseEntity.ok(UniResponse.success(updated, "Task updated successfully"));
     }
 
-    // DELETE
+    /** DELETE */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<UniResponse<Void>> delete(@PathVariable Long id) {
+
+        boolean deleted = service.delete(id);
+        if (!deleted) {
+            return ResponseEntity.badRequest()
+                    .body(UniResponse.error("DELETE_FAILED", "Task not found or not owned by user"));
+        }
+        return ResponseEntity.ok(UniResponse.success(null, "Task deleted successfully"));
     }
 
+    /** USER’S TASKS */
+    @GetMapping("/my")
+    public ResponseEntity<UniResponse<List<Task>>> getMyTasks() {
+        Long userId = getLoggedUserId();
+        List<Task> tasks = service.getByUser(userId);
+        return ResponseEntity.ok(UniResponse.success(tasks, "Fetched user tasks"));
+    }
 }

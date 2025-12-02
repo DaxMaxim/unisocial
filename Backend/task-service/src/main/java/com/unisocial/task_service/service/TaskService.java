@@ -6,24 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unisocial.task_service.dto.TaskRequest;
-import com.unisocial.task_service.dto.UniRequest;
 import com.unisocial.task_service.entity.Task;
 import com.unisocial.task_service.repository.TaskRepository;
 
-import lombok.Data;
-
-@Data
 @Service
 public class TaskService {
-	
-	@Autowired
+
+    @Autowired
     private TaskRepository repo;
 
-	public Task create(UniRequest<TaskRequest> req) {
+    public Task create(Long userId, TaskRequest req) {
         Task t = new Task();
-        t.setTitle(req.getData().getTitle());
-        t.setDescription(req.getData().getDescription());
-        t.setUserId(req.getUserId());
+        t.setTitle(req.getTitle());
+        t.setDescription(req.getDescription());
+        t.setUserId(userId);
         return repo.save(t);
     }
 
@@ -35,19 +31,21 @@ public class TaskService {
         return repo.findByUserId(userId);
     }
 
-    public Task update(Long id, UniRequest<TaskRequest> req) {
+    public Task update(Long id, Long userId, TaskRequest req) {
         Task t = repo.findById(id).orElse(null);
-        if (t == null) return null;
+        if (t == null || !t.getUserId().equals(userId)) return null;
 
-        t.setTitle(req.getData().getTitle());
-        t.setDescription(req.getData().getDescription());
-        t.setUserId(req.getUserId());
+        t.setTitle(req.getTitle());
+        t.setDescription(req.getDescription());
 
         return repo.save(t);
     }
 
-    public void delete(Long id) {
-        repo.deleteById(id);
-    }
+    public boolean delete(Long id) {
+        Task t = repo.findById(id).orElse(null);
+        if (t == null) return false;
 
+        repo.delete(t);
+        return true;
+    }
 }

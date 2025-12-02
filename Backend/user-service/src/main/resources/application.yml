@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   datasource:
     url: ${DB_URL}
@@ -12,12 +15,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  jackson:
-    time-zone: UTC
-
-server:
-  port: ${SERVER_PORT:8081}   # Default to 8081 if not provided
 
 jwt:
   secret: ${JWT_SECRET}
